@@ -1,0 +1,51 @@
+import java.io.*;
+import java.util.*;
+
+// Serializable Student class
+class Student implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private int id;
+    private String name;
+    private double gpa;
+
+    public Student(int id, String name, double gpa) {
+        this.id = id;
+        this.name = name;
+        this.gpa = gpa;
+    }
+
+    public void display() {
+        System.out.println("ID: " + id + ", Name: " + name + ", GPA: " + gpa);
+    }
+}
+
+public class StudentSerialization {
+    private static final String FILE_NAME = "student.ser";
+
+    public static void serializeStudent(Student student) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+            out.writeObject(student);
+            System.out.println("Student serialized successfully.");
+        } catch (IOException e) {
+            System.out.println("Error serializing student: " + e.getMessage());
+        }
+    }
+
+    public static void deserializeStudent() {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
+            Student student = (Student) in.readObject();
+            System.out.println("Deserialized Student Details:");
+            student.display();
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + e.getMessage());
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error deserializing student: " + e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        Student student = new Student(1, "John Doe", 3.8);
+        serializeStudent(student);
+        deserializeStudent();
+    }
+}
